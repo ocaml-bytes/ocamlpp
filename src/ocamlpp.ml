@@ -14,21 +14,44 @@ let error msg =
   exit 1;
 ;;
 
+let usage_msg = 
+  Printf.sprintf "Usage: %s [ -version ] [ -debug | -no-debug ] \
+                  (<file.cmo> | <file.byte>)"
+    Sys.argv.(0)
+;;
+
 let usage () =
-  Printf.eprintf "Usage: %s [ -version ] (<file.cmo> | <file.byte>)\n"
-    Sys.argv.(0);
+  prerr_endline usage_msg;
   exit 1;
 ;;
 
-if Array.length Sys.argv <> 2 then usage ();;
-
-if Sys.argv.(1) = "-version" then (
+let version () =
   print_endline Config.version;
   exit 0;
-);;
+;;
+
+let target =
+  let target = ref None in
+  let rest file =
+    if !target <> None then begin
+      print_endline "ocamlpp processes only one file at a time";
+      usage ();
+  end else target := Some file
+  in
+  Arg.parse [
+    "-version", Arg.Unit version, "prints version information";
+    "-debug", Arg.Set Config.debug, "shows debug information";
+    "-no-debug", Arg.Clear Config.debug, "hides debug information";
+  ] rest usage_msg;
+  match !target with
+    | None ->
+      print_endline "no input file given";
+      usage ()
+    | Some target -> target
+;;
 
 begin try
-  let ((compunit, _code, _debug) as cmo) = Cmoparser.parse Sys.argv.(1) in
+  let ((compunit, _code, _debug) as cmo) = Cmoparser.parse target in
   Cmoprinter.print (Globals.find (Globals.Reloc compunit)) stdout cmo;
 with Cmoparser.Not_a_cmo -> begin try
   let ic = open_in_bin Sys.argv.(1) in

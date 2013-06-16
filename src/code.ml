@@ -146,7 +146,7 @@ let parse ic index =
 
 let print globnames debug oc (instrs, fstarts) =
   let f i instr =
-    Debug.print_at debug oc i;
+    if !Config.debug then Debug.print_at debug oc i;
     if ISet.mem instr.addr fstarts then Printf.fprintf oc "\n";
     Printf.fprintf oc "%-5d  %a\n" i (print_instr globnames) instr;
   in
