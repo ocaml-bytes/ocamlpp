@@ -79,7 +79,7 @@ let string_of_elem e =
 let parse ic index =
   let (offset, _) =
     try Index.find_section index Index.Data
-    with Not_found -> failwith "code section not found"
+    with Not_found -> failwith "data section not found"
   in
   seek_in ic offset;
   let (tbl : Obj.t array) = input_value ic in
