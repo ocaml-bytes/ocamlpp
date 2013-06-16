@@ -105,7 +105,7 @@ let print_compilation_unit oc {
   ignore (cu_reloc, cu_imports, cu_primitives);
 ;;
 
-let print globnames oc (ci, code) =
+let print globnames oc (ci, code, debug) =
   print_compilation_unit oc ci;
-  Code.print globnames oc code;
+  Code.print globnames debug oc code;
 ;;
