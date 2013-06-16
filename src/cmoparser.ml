@@ -25,8 +25,10 @@ let parse file_name =
       let code =
         Code.parse_segment ic compunit.Cmo.cu_pos compunit.Cmo.cu_codesize
       in
+      seek_in ic compunit.Cmo.cu_debug;
+      let debug = (input_value ic : Cmo.debug_event list) in
       close_in ic;
-      (compunit, code)
+      (compunit, code, debug)
     end else raise Not_a_cmo
   with
     | End_of_file -> close_in ic; raise Not_a_cmo

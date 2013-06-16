@@ -46,3 +46,47 @@ type compilation_unit = {
   mutable cu_debug: int;                (* Position of debugging info, or 0 *)
   cu_debugsize: int;                    (* Length of debugging info *)
 }
+
+
+(* Debugging events *)
+
+(* abstract types for part of the actual implementation we don't need/want
+   to reveal *)
+type env_summary
+and subst_t
+and compilation_env
+and types_type_expr
+
+type debug_event = {
+  ev_pos: int;                        (* Position in bytecode *)
+  ev_module: string;                  (* Name of defining module *)
+  ev_loc: location_t;                 (* Location in source file *)
+  ev_kind: debug_event_kind;          (* Before/after event *)
+  ev_info: debug_event_info;          (* Extra information *)
+  ev_typenv: env_summary;             (* Typing environment *)
+  ev_typsubst: subst_t;               (* Substitution over types *)
+  ev_compenv: compilation_env;        (* Compilation environment *)
+  ev_stacksize: int;                  (* Size of stack frame *)
+  ev_repr: debug_event_repr }         (* Position of the representative *)
+
+and debug_event_kind =
+    Event_before
+  | Event_after of types_type_expr
+  | Event_pseudo
+
+and debug_event_info =
+    Event_function
+  | Event_return of int
+  | Event_other
+
+and debug_event_repr =
+    Event_none
+  | Event_parent of int ref
+  | Event_child of int ref
+
+and location_t = {
+  loc_start: Lexing.position;
+  loc_end: Lexing.position;
+  loc_ghost: bool;
+}
+
