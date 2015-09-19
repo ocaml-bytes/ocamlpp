@@ -69,7 +69,7 @@ done
 echo "\
 VERSION = $VERSION
 
-OCAMLBUILD = $OCAMLBUILD -no-links -classic-display
+OCAMLBUILD = $OCAMLBUILD -use-ocamlfind -no-links -classic-display
 
 BINDIR = $BINDIR
 MAN1DIR = $MANDIR/man1
