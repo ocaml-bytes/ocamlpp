@@ -1,0 +1,2 @@
+true: debug, bin_annot, warn(Ae), warn_error(A)
+true: package(bytes)

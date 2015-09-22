@@ -18,7 +18,7 @@ TARGS = $(BIN)/ocamlpp
 all: $(TARGS)
 
 $(BIN)/%: $(SRCS) config.ml
-	$(OCAMLBUILD) -cflag -g -lflag -g $*.native
+	$(OCAMLBUILD) $*.native
 	cp _build/$*.native $@
 
 config.ml: ../etc/config.ml
